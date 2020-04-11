@@ -1,0 +1,13 @@
+A
+int 3
+color 4//支持16种情况
+uint 1
+
+B
+int 3
+int 3
+int 3
+int 3
+int 3
+int 3
+

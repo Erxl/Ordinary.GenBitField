@@ -1,0 +1,96 @@
+﻿<Window x:Class="Ordinary.GenBitField.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ordinary.GenBitField.Desktop"
+        mc:Ignorable="d"
+        Title="位域代码生成" Height="710" Width="391">
+    <Window.DataContext>
+        <local:MainWindowVM />
+    </Window.DataContext>
+    <StackPanel>
+        <ItemsControl ItemsSource="{Binding StructInfoVMs}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Column="0">
+
+                                <TextBlock Text="名称：" />
+                                <TextBox Text="{Binding StructInfo.Name, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <TextBlock Text="比特：" />
+                                <TextBlock Text="{Binding StructInfo.Bits}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                <TextBlock Text="字节：" />
+                                <TextBlock Text="{Binding StructInfo.Size}" />
+                            </StackPanel>
+                            <Button Content="添加字段" Command="{Binding NewFieldCommand}" Grid.Column="3" />
+                            <Button Content="删除" Command="{Binding RemoveThisCommand}" Grid.Column="4" />
+                            <Button Content="复制代码" Command="{Binding CopyStructMembersCodeCommand}" Grid.Column="5" />
+                        </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <Control Width="10"></Control>
+                            <ItemsControl ItemsSource="{Binding FieldInfoVMs}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                                        <TextBlock Text="类型：" />
+                                                        <TextBox Text="{Binding FieldInfo.TypeName, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                                        <TextBlock Text="名称：" />
+                                                        <TextBox Text="{Binding FieldInfo.Name, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                                        <TextBlock Text="比特：" />
+                                                        <TextBox Text="{Binding FieldInfo.Bits,UpdateSourceTrigger=PropertyChanged}">
+                                                        </TextBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="3">
+                                                        <TextBlock Text="最大：" />
+                                                        <TextBox Text="{Binding FieldInfo.Number, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <ToggleButton Grid.Column="4" Content="使用最大值" IsChecked="{Binding FieldInfo.UseNumber}" />
+                                                    <Button Grid.Column="5" Content="删除" Command="{Binding RemoveThisCommand}" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="添加" Command="{Binding NewStructCommand}" />
+            <Button Content="打开" Command="{Binding OpenCommand}" />
+            <Button Content="保存" Command="{Binding SaveCommand}" />
+            <Button Content="另存为" Command="{Binding SaveAsCommand}" />
+        </StackPanel>
+    </StackPanel>
+</Window>

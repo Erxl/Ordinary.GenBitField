@@ -112,7 +112,7 @@ namespace Ordinary.GenBitField
         /// 获取结构成员的代码
         /// </summary>
         /// <returns>代码文本</returns>
-        public StringBuilder GetStructMembersCode()
+        public unsafe StringBuilder GetStructMembersCode()
         {
             var sb = new StringBuilder();
 
@@ -157,29 +157,22 @@ namespace Ordinary.GenBitField
                 //生成源缓冲区和结果缓冲区
                 if (intbufs == 1)
                 {
-                    sb.Append("uint buf1;");
-                    sb.Append("uint buf2;");
-                    sb.Append("uint* bufsrc=&buf1;");
-                    sb.Append("uint* bufdst=&buf2;");
+                    sb.Append("uint buf1,buf2;");
+                    sb.Append("uint* bufsrc=&buf1,bufdst=&buf2;");
                 }
                 else if (intbufs == 2)
                 {
-                    sb.Append("ulong buf1;");
-                    sb.Append("ulong buf2;");
-                    sb.Append("uint* bufsrc=(uint*)&buf1;");
-                    sb.Append("uint* bufdst=(uint*)&buf2;");
+                    sb.Append("ulong buf1,buf2;");
+                    sb.Append("uint* bufsrc=(uint*)&buf1,bufdst=(uint*)&buf2;");
                 }
                 else if (intbufs <= 4)
                 {
-                    sb.Append("uint128 buf1;");
-                    sb.Append("uint128 buf2;");
-                    sb.Append("uint* bufsrc=(uint*)&buf1;");
-                    sb.Append("uint* bufdst=(uint*)&buf2;");
+                    sb.Append("uint128 buf1,buf2;");
+                    sb.Append("uint* bufsrc=(uint*)&buf1,bufdst=(uint*)&buf2;");
                 }
                 else
                 {
-                    sb.Append($"var bufsrc=stackalloc uint[{intbufs}];");
-                    sb.Append($"var bufdst=stackalloc uint[{intbufs}];");//
+                    sb.Append($"uint* bufsrc=stackalloc uint[{intbufs}],bufdst=stackalloc uint[{intbufs}];");
                 }
 
                 for (int j = 0; j < size; j++)
@@ -212,29 +205,22 @@ namespace Ordinary.GenBitField
                 //生成源缓冲区和结果缓冲区
                 if (intbufs == 1)
                 {
-                    sb.Append("uint buf1;");
-                    sb.Append("uint buf2;");
-                    sb.Append("uint* bufsrc=&buf1;");
-                    sb.Append("uint* bufdst=&buf2;");
+                    sb.Append("uint buf1,buf2;");
+                    sb.Append("uint* bufsrc=&buf1,bufdst=&buf2;");
                 }
                 else if (intbufs == 2)
                 {
-                    sb.Append("ulong buf1;");
-                    sb.Append("ulong buf2;");
-                    sb.Append("uint* bufsrc=(uint*)&buf1;");
-                    sb.Append("uint* bufdst=(uint*)&buf2;");
+                    sb.Append("ulong buf1,buf2;");
+                    sb.Append("uint* bufsrc=(uint*)&buf1,bufdst=(uint*)&buf2;");
                 }
                 else if (intbufs <= 4)
                 {
-                    sb.Append("uint128 buf1;");
-                    sb.Append("uint128 buf2;");
-                    sb.Append("uint* bufsrc=(uint*)&buf1;");
-                    sb.Append("uint* bufdst=(uint*)&buf2;");
+                    sb.Append("uint128 buf1,buf2;");
+                    sb.Append("uint* bufsrc=(uint*)&buf1,bufdst=(uint*)&buf2;");
                 }
                 else
                 {
-                    sb.Append($"var bufsrc=stackalloc uint[{intbufs}];");
-                    sb.Append($"var bufdst=stackalloc uint[{intbufs}];");//
+                    sb.Append($"uint* bufsrc=stackalloc uint[{intbufs}],bufdst=stackalloc uint[{intbufs}];");
                 }
 
                 sb.Append($"*({item.TypeName}*)bufsrc=value;");//装入源缓冲区

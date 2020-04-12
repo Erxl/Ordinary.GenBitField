@@ -42,7 +42,7 @@ namespace Ordinary.GenBitField.Desktop
         public void NewField()
         {
             var a = StructInfo.NewField();
-            a.TypeName = "int";
+            a.TypeName = "uint";
             a.Bits = 32;
         }
 

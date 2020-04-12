@@ -101,6 +101,13 @@ namespace Ordinary.GenBitField
             return j;
         }
 
+        //private enum BufferType
+        //{
+        //    Int8,
+        //    Int16,
+        //    Int16,
+        //}
+
         /// <summary>
         /// 获取结构成员的代码
         /// </summary>
@@ -109,11 +116,13 @@ namespace Ordinary.GenBitField
         {
             var sb = new StringBuilder();
 
+            var l = FieldInfos.Count;
+
             //生成数据缓冲区字段
-            sb.Append("private byte ");
+            sb.Append($"private byte ");
             for (int i = 0; i < Size; i++)
             {
-                sb.Append("byte" + i);
+                sb.Append($"byte{i}");
                 if (i == Size - 1)
                 {
                     sb.Append(';');
@@ -125,7 +134,6 @@ namespace Ordinary.GenBitField
             }
 
             //生成每个字段属性
-            var l = FieldInfos.Count;
             var beginBits = 0;
             var endBits = 0;
             for (var i = 0; i < l; i++)
@@ -136,32 +144,122 @@ namespace Ordinary.GenBitField
                 var beginByte = beginBits >> 3;
                 var endByte = (endBits >> 3) + ((endBits % 8) == 0 ? 0 : 1);
                 var size = endByte - beginByte;
-                var offsetInByte = beginBits % 8;
+                var offsetInBeginByte = beginBits % 8;
+                var offsetInEndByte = endBits % 8;
 
+                var intbufs = (size >> 2) + ((size % 4) == 0 ? 0 : 1);
                 //创建属性
                 sb.Append($"public {item.TypeName} {item.Name}");
 
                 //Get方法
                 sb.Append("{get{");
-                sb.Append($"{SelectIntTypeFromSize(size).Name} buffer;");//声明buffer
-                sb.Append("var bufferPtr=(byte*)&buffer;");//声明buffer指针
-                for (int j = 0; j < size; j++)//为buffer赋值
+
+                //生成源缓冲区和结果缓冲区
+                if (intbufs == 1)
                 {
-                    sb.Append($"bufferPtr[{j}]=byte{beginByte + j};");
+                    sb.Append("uint buf1;");
+                    sb.Append("uint buf2;");
+                    sb.Append("uint* bufsrc=&buf1;");
+                    sb.Append("uint* bufdst=&buf2;");
                 }
-                sb.Append($"return ({item.TypeName})({GetBitMask(item.Bits)}&(ulong)(buffer>>{offsetInByte}));");//将右移后的buffer返回
+                else if (intbufs == 2)
+                {
+                    sb.Append("ulong buf1;");
+                    sb.Append("ulong buf2;");
+                    sb.Append("uint* bufsrc=(uint*)&buf1;");
+                    sb.Append("uint* bufdst=(uint*)&buf2;");
+                }
+                else if (intbufs <= 4)
+                {
+                    sb.Append("uint128 buf1;");
+                    sb.Append("uint128 buf2;");
+                    sb.Append("uint* bufsrc=(uint*)&buf1;");
+                    sb.Append("uint* bufdst=(uint*)&buf2;");
+                }
+                else
+                {
+                    sb.Append($"var bufsrc=stackalloc uint[{intbufs}];");
+                    sb.Append($"var bufdst=stackalloc uint[{intbufs}];");//
+                }
+
+                for (int j = 0; j < size; j++)
+                {
+                    if (j == size - 1 && offsetInEndByte != 0)//判断是否在末尾，且有偏移（需要使用蒙版）
+                    {
+                        sb.Append($"*((byte*)bufsrc+{j})=(byte)(byte{beginByte + j}&{(byte)(byte.MaxValue >> (8 - offsetInEndByte))});");//复制数据到源缓冲区,并在末尾使用蒙版
+                    }
+                    else
+                    {
+                        sb.Append($"*((byte*)bufsrc+{j})=byte{beginByte + j};");//复制数据到源缓冲区
+                    }
+                }
+                if (offsetInBeginByte != 0) ;
+                //右移到目的缓冲区
+                if (intbufs <= 4)
+                {
+                    sb.Append($"buf2=buf1>>{offsetInBeginByte};");
+                }
+                else
+                {
+                    sb.Append($"M.ShiftRightShort(bufsrc, {intbufs}, bufdst,{offsetInBeginByte});");
+                }
+                sb.Append($"return *({item.TypeName}*)bufdst;");//返回
 
                 //Set方法
                 var t = SelectIntTypeFromSize(size);
                 sb.Append("}set{");
-                sb.Append($"{typeof(uint128).Name} buffer;");//声明buffer
-                sb.Append("var bufferPtr=(byte*)&buffer;");//声明buffer指针
-                sb.Append($"bufferPtr[0]=(byte)(byte{beginByte}<<{8 - offsetInByte});");
-                sb.Append($"*({t.Name}*)(bufferPtr+1)=({t.Name})value;");
-                sb.Append($"*({SelectIntTypeFromSize(size + 1).Name}*)bufferPtr>>={8 - offsetInByte};");
-                for (int j = 0; j < size; j++)//为字段赋值
+
+                //生成源缓冲区和结果缓冲区
+                if (intbufs == 1)
                 {
-                    sb.Append($"byte{beginByte + j}=bufferPtr[{j}];");
+                    sb.Append("uint buf1;");
+                    sb.Append("uint buf2;");
+                    sb.Append("uint* bufsrc=&buf1;");
+                    sb.Append("uint* bufdst=&buf2;");
+                }
+                else if (intbufs == 2)
+                {
+                    sb.Append("ulong buf1;");
+                    sb.Append("ulong buf2;");
+                    sb.Append("uint* bufsrc=(uint*)&buf1;");
+                    sb.Append("uint* bufdst=(uint*)&buf2;");
+                }
+                else if (intbufs <= 4)
+                {
+                    sb.Append("uint128 buf1;");
+                    sb.Append("uint128 buf2;");
+                    sb.Append("uint* bufsrc=(uint*)&buf1;");
+                    sb.Append("uint* bufdst=(uint*)&buf2;");
+                }
+                else
+                {
+                    sb.Append($"var bufsrc=stackalloc uint[{intbufs}];");
+                    sb.Append($"var bufdst=stackalloc uint[{intbufs}];");//
+                }
+
+                sb.Append($"*({item.TypeName}*)bufsrc=value;");//装入源缓冲区
+                if (offsetInBeginByte != 0)
+                {
+                    //左移到目的缓冲区
+                    if (intbufs <= 4)
+                    {
+                        sb.Append($"buf2=buf1<<{offsetInBeginByte};");
+                    }
+                    else
+                    {
+                        sb.Append($"M.ShiftLeftShort(bufsrc, {intbufs}, bufdst,{offsetInBeginByte});");
+                    }
+                    sb.Append($"*(byte*)bufdst|=(byte)(byte{beginByte}&{(byte)(byte.MaxValue >> (8 - offsetInBeginByte))});");//为起点字节填充缺少信息
+                }
+                if (offsetInEndByte != 0)
+                {
+                    sb.Append($"*((byte*)bufdst+{size - 1})|=(byte)(byte{endByte}&{(byte)(byte.MaxValue << offsetInEndByte)});");//为终点字节填充缺少信息
+                }
+
+                //拷贝缓冲区到数据
+                for (int j = 0; j < size; j++)
+                {
+                    sb.Append($"byte{j}=((byte*)bufdst)[{j}];");
                 }
 
                 //结束本属性

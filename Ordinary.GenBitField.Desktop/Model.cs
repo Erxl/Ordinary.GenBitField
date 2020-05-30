@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Linq;
+using Ordinary.CSharpCode;
 
 namespace Ordinary.GenBitField.Desktop
 {
@@ -21,20 +22,20 @@ namespace Ordinary.GenBitField.Desktop
     {
         public Model()
         {
-            StructInfos = new ReadOnlyObservableCollection<StructInfo>(structInfos);
+            StructInfos = new ReadOnlyObservableCollection<BitFieldStructInfo>(structInfos);
         }
 
-        private ObservableCollection<StructInfo> structInfos = new ObservableCollection<StructInfo>();
-        public ReadOnlyObservableCollection<StructInfo> StructInfos { get; }
+        private ObservableCollection<BitFieldStructInfo> structInfos = new ObservableCollection<BitFieldStructInfo>();
+        public ReadOnlyObservableCollection<BitFieldStructInfo> StructInfos { get; }
 
-        public StructInfo NewStruct()
+        public BitFieldStructInfo NewStruct()
         {
-            var a = new StructInfo();
+            var a = new BitFieldStructInfo();
             structInfos.Add(a);
             return a;
         }
 
-        public void RemoveStruct(StructInfo structInfo)
+        public void RemoveStruct(BitFieldStructInfo structInfo)
         {
             structInfos.Remove(structInfo);
         }

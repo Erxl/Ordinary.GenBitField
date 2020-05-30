@@ -13,21 +13,21 @@ using Ordinary.CSharpCode;
 
 namespace Ordinary.GenBitField.Desktop
 {
-    public class FieldInfoVM
+    public class BitsFieldInfoVM
     {
         public BitFieldInfo FieldInfo { get; }
-        public StructInfoVM StructInfoVM { get; }
+        public BitsFieldStructInfoVM BitsFieldStructInfoVm { get; }
 
-        public FieldInfoVM(StructInfoVM structInfovm, BitFieldInfo fieldInfo)
+        public BitsFieldInfoVM(BitsFieldStructInfoVM bitsFieldStructInfovm, BitFieldInfo fieldInfo)
         {
-            StructInfoVM = structInfovm;
+            BitsFieldStructInfoVm = bitsFieldStructInfovm;
             FieldInfo = fieldInfo;
             RemoveThisCommand = new DelegateCommand(RemoveThis);
         }
 
         public void RemoveThis()
         {
-            StructInfoVM.StructInfo.RemoveField(FieldInfo);
+            BitsFieldStructInfoVm.StructInfo.RemoveField(FieldInfo);
         }
 
         public ICommand RemoveThisCommand { get; }

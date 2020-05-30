@@ -19,18 +19,18 @@ using Ordinary.CSharpCode;
 
 namespace Ordinary.GenBitField.Desktop
 {
-    public class StructInfoVM : ObservableObject
+    public class BitsFieldStructInfoVM : ObservableObject
     {
         public MainWindowVM MainWindowVM { get; }
         public BitFieldStructInfo StructInfo { get; }
 
-        public StructInfoVM(MainWindowVM mainWindowVM, BitFieldStructInfo structInfo)
+        public BitsFieldStructInfoVM(MainWindowVM mainWindowVM, BitFieldStructInfo structInfo)
         {
             MainWindowVM = mainWindowVM;
             StructInfo = structInfo;
-            fieldInfoVMsMapping = new ObservableMappingCollectionMapping<BitFieldInfo, FieldInfoVM>(
-                fieldInfoVMs, StructInfo.FieldInfos, a => new FieldInfoVM(this, a));
-            FieldInfoVMs = new ReadOnlyObservableCollection<FieldInfoVM>(fieldInfoVMs);
+            fieldInfoVMsMapping = new ObservableMappingCollectionMapping<BitFieldInfo, BitsFieldInfoVM>(
+                fieldInfoVMs, StructInfo.FieldInfos, a => new BitsFieldInfoVM(this, a));
+            FieldInfoVMs = new ReadOnlyObservableCollection<BitsFieldInfoVM>(fieldInfoVMs);
             NewFieldCommand = new DelegateCommand(NewField);
             RemoveThisCommand = new DelegateCommand(RemoveThis);
             CopyStructMembersCodeCommand = new DelegateCommand(CopyStructMembersCode);
@@ -50,9 +50,9 @@ namespace Ordinary.GenBitField.Desktop
 
         public ICommand NewFieldCommand { get; }
         public ICommand RemoveThisCommand { get; }
-        private ObservableMappingCollectionMapping<BitFieldInfo, FieldInfoVM> fieldInfoVMsMapping;
-        private ObservableCollection<FieldInfoVM> fieldInfoVMs = new ObservableCollection<FieldInfoVM>();
-        public ReadOnlyObservableCollection<FieldInfoVM> FieldInfoVMs { get; }
+        private ObservableMappingCollectionMapping<BitFieldInfo, BitsFieldInfoVM> fieldInfoVMsMapping;
+        private ObservableCollection<BitsFieldInfoVM> fieldInfoVMs = new ObservableCollection<BitsFieldInfoVM>();
+        public ReadOnlyObservableCollection<BitsFieldInfoVM> FieldInfoVMs { get; }
 
         public void CopyStructMembersCode()
         {

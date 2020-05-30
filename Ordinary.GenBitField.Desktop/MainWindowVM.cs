@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Windows.Input;
+using Ordinary.CSharpCode;
 
 namespace Ordinary.GenBitField.Desktop
 {
@@ -32,9 +33,9 @@ namespace Ordinary.GenBitField.Desktop
                 FileDirectory = arg;
                 Model.LoadJson(JArray.Parse(File.ReadAllText(arg)));
             }
-            structInfoVMsMapping = new ObservableMappingCollectionMapping<StructInfo, StructInfoVM>(
-                structInfoVMs, Model.StructInfos, a => new StructInfoVM(this, a));
-            StructInfoVMs = new ReadOnlyObservableCollection<StructInfoVM>(structInfoVMs);
+            structInfoVMsMapping = new ObservableMappingCollectionMapping<BitFieldStructInfo, BitsFieldStructInfoVM>(
+                structInfoVMs, Model.StructInfos, a => new BitsFieldStructInfoVM(this, a));
+            StructInfoVMs = new ReadOnlyObservableCollection<BitsFieldStructInfoVM>(structInfoVMs);
             NewStructCommand = new DelegateCommand(NewStruct);
             SaveCommand = new DelegateCommand(Save);
             SaveAsCommand = new DelegateCommand(SaveAs);
@@ -44,11 +45,11 @@ namespace Ordinary.GenBitField.Desktop
         public string FileDirectory { get => file; set => OnPropertyChange(ref file, value); }
         public Model Model { get; }
 
-        private ObservableMappingCollectionMapping<StructInfo, StructInfoVM> structInfoVMsMapping;
-        private ObservableCollection<StructInfoVM> structInfoVMs = new ObservableCollection<StructInfoVM>();
+        private ObservableMappingCollectionMapping<BitFieldStructInfo, BitsFieldStructInfoVM> structInfoVMsMapping;
+        private ObservableCollection<BitsFieldStructInfoVM> structInfoVMs = new ObservableCollection<BitsFieldStructInfoVM>();
         private string file;
 
-        public ReadOnlyObservableCollection<StructInfoVM> StructInfoVMs { get; }
+        public ReadOnlyObservableCollection<BitsFieldStructInfoVM> StructInfoVMs { get; }
 
         public void NewStruct()
         {
@@ -57,9 +58,9 @@ namespace Ordinary.GenBitField.Desktop
 
         public ICommand NewStructCommand { get; }
 
-        public void RemoveStruct(StructInfoVM structInfoVM)
+        public void RemoveStruct(BitsFieldStructInfoVM bitsFieldStructInfoVm)
         {
-            Model.RemoveStruct(structInfoVM.StructInfo);
+            Model.RemoveStruct(bitsFieldStructInfoVm.StructInfo);
         }
 
         public ICommand SaveCommand { get; }

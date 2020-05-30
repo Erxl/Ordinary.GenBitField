@@ -11,22 +11,24 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using Ordinary.CSharpCode;
 
 namespace Ordinary.GenBitField.Desktop
 {
     public class StructInfoVM : ObservableObject
     {
         public MainWindowVM MainWindowVM { get; }
-        public StructInfo StructInfo { get; }
+        public BitFieldStructInfo StructInfo { get; }
 
-        public StructInfoVM(MainWindowVM mainWindowVM, StructInfo structInfo)
+        public StructInfoVM(MainWindowVM mainWindowVM, BitFieldStructInfo structInfo)
         {
             MainWindowVM = mainWindowVM;
             StructInfo = structInfo;
-            fieldInfoVMsMapping = new ObservableMappingCollectionMapping<FieldInfo, FieldInfoVM>(
+            fieldInfoVMsMapping = new ObservableMappingCollectionMapping<BitFieldInfo, FieldInfoVM>(
                 fieldInfoVMs, StructInfo.FieldInfos, a => new FieldInfoVM(this, a));
             FieldInfoVMs = new ReadOnlyObservableCollection<FieldInfoVM>(fieldInfoVMs);
             NewFieldCommand = new DelegateCommand(NewField);
@@ -48,7 +50,7 @@ namespace Ordinary.GenBitField.Desktop
 
         public ICommand NewFieldCommand { get; }
         public ICommand RemoveThisCommand { get; }
-        private ObservableMappingCollectionMapping<FieldInfo, FieldInfoVM> fieldInfoVMsMapping;
+        private ObservableMappingCollectionMapping<BitFieldInfo, FieldInfoVM> fieldInfoVMsMapping;
         private ObservableCollection<FieldInfoVM> fieldInfoVMs = new ObservableCollection<FieldInfoVM>();
         public ReadOnlyObservableCollection<FieldInfoVM> FieldInfoVMs { get; }
 

@@ -9,15 +9,16 @@
 */
 
 using System.Windows.Input;
+using Ordinary.CSharpCode;
 
 namespace Ordinary.GenBitField.Desktop
 {
     public class FieldInfoVM
     {
-        public FieldInfo FieldInfo { get; }
+        public BitFieldInfo FieldInfo { get; }
         public StructInfoVM StructInfoVM { get; }
 
-        public FieldInfoVM(StructInfoVM structInfovm, FieldInfo fieldInfo)
+        public FieldInfoVM(StructInfoVM structInfovm, BitFieldInfo fieldInfo)
         {
             StructInfoVM = structInfovm;
             FieldInfo = fieldInfo;

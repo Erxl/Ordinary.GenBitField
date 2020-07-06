@@ -7,6 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ordinary" Version="0.0.3" />
+    <PackageReference Include="Ordinary.Binary" Version="0.0.4" />
   </ItemGroup>
 </Project>

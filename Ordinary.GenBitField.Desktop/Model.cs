@@ -8,24 +8,31 @@
     See the Mulan PSL v2 for more details.
 */
 
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Linq;
-using Ordinary.CSharpCode;
+using Ordinary.Code.CSharp;
+using System.Runtime.Serialization;
 
 namespace Ordinary.GenBitField.Desktop
 {
-    public class Model : ObservableObject
+    public class Model : ObservableObject, ISerializable
     {
         public Model()
         {
+            structInfos = new ObservableCollection<BitFieldStructInfo>();
             StructInfos = new ReadOnlyObservableCollection<BitFieldStructInfo>(structInfos);
         }
 
-        private ObservableCollection<BitFieldStructInfo> structInfos = new ObservableCollection<BitFieldStructInfo>();
+        public Model(SerializationInfo info, StreamingContext context)
+        {
+            StructInfos = new ReadOnlyObservableCollection<BitFieldStructInfo>(structInfos);
+            structInfos = info.GetValue(nameof(StructInfos), typeof(ObservableCollection<BitFieldStructInfo>)) as ObservableCollection<BitFieldStructInfo>;
+        }
+
+        private ObservableCollection<BitFieldStructInfo> structInfos;
         public ReadOnlyObservableCollection<BitFieldStructInfo> StructInfos { get; }
 
         public BitFieldStructInfo NewStruct()
@@ -40,22 +47,9 @@ namespace Ordinary.GenBitField.Desktop
             structInfos.Remove(structInfo);
         }
 
-        public void LoadJson(JArray array)
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            foreach (var item in array)
-            {
-                NewStruct().LoadJson(item as JObject);
-            }
-        }
-
-        public JArray GetJson()
-        {
-            var a = new JArray();
-            foreach (var item in StructInfos)
-            {
-                a.Add(item.GetJson());
-            }
-            return a;
+            info.AddValue(nameof(StructInfos), StructInfos);
         }
     }
 }

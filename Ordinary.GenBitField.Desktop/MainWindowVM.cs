@@ -9,14 +9,14 @@
 */
 
 using Microsoft.Win32;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Windows.Input;
-using Ordinary.CSharpCode;
+using Ordinary.Code.CSharp;
+using System.Text.Json;
 
 namespace Ordinary.GenBitField.Desktop
 {
@@ -24,14 +24,17 @@ namespace Ordinary.GenBitField.Desktop
     {
         public MainWindowVM()
         {
-            Model = new Model();
             var args = Environment.GetCommandLineArgs();
 
             if (args.Length == 2)
             {
                 var arg = args[1];
                 FileDirectory = arg;
-                Model.LoadJson(JArray.Parse(File.ReadAllText(arg)));
+                Model = JsonSerializer.Deserialize<Model>(File.ReadAllText(arg));
+            }
+            if (Model == null)
+            {
+                Model = new Model();
             }
             structInfoVMsMapping = new ObservableMappingCollectionMapping<BitFieldStructInfo, BitsFieldStructInfoVM>(
                 structInfoVMs, Model.StructInfos, a => new BitsFieldStructInfoVM(this, a));
@@ -43,7 +46,7 @@ namespace Ordinary.GenBitField.Desktop
         }
 
         public string FileDirectory { get => file; set => OnPropertyChange(ref file, value); }
-        public Model Model { get; }
+        public Model Model { get; private set; }
 
         private ObservableMappingCollectionMapping<BitFieldStructInfo, BitsFieldStructInfoVM> structInfoVMsMapping;
         private ObservableCollection<BitsFieldStructInfoVM> structInfoVMs = new ObservableCollection<BitsFieldStructInfoVM>();
@@ -77,7 +80,7 @@ namespace Ordinary.GenBitField.Desktop
                 }
             }
             if (!string.IsNullOrEmpty(FileDirectory))
-                File.WriteAllText(FileDirectory, Model.GetJson().ToString());
+                File.WriteAllText(FileDirectory, JsonSerializer.Serialize(Model));
         }
 
         public void SaveAs()
@@ -90,7 +93,7 @@ namespace Ordinary.GenBitField.Desktop
             }
 
             if (!string.IsNullOrEmpty(FileDirectory))
-                File.WriteAllText(FileDirectory, Model.GetJson().ToString());
+                File.WriteAllText(FileDirectory, JsonSerializer.Serialize(Model));
         }
 
         public ICommand SaveAsCommand { get; }
@@ -101,7 +104,7 @@ namespace Ordinary.GenBitField.Desktop
             if (dialog.ShowDialog() ?? false)
             {
                 FileDirectory = dialog.FileName;
-                Model.LoadJson(JArray.Parse(File.ReadAllText(FileDirectory)));
+                Model = JsonSerializer.Deserialize<Model>(File.ReadAllText(FileDirectory));
             }
         }
 

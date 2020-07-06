@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using Ordinary.CSharpCode;
+using Ordinary.Code.CSharp;
 
 namespace Ordinary.GenBitField.Desktop
 {

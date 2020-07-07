@@ -16,7 +16,14 @@ using System.IO;
 using System.Text;
 using System.Windows.Input;
 using Ordinary.Code.CSharp;
+
+//using System.Text.Json;
+using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Ordinary.GenBitField.Desktop
 {
@@ -30,19 +37,38 @@ namespace Ordinary.GenBitField.Desktop
             {
                 var arg = args[1];
                 FileDirectory = arg;
-                Model = JsonSerializer.Deserialize<Model>(File.ReadAllText(arg));
+                LoadModel(arg);
             }
-            if (Model == null)
+            else
             {
-                Model = new Model();
+                LoadEmptyModel();
             }
-            structInfoVMsMapping = new ObservableMappingCollectionMapping<BitFieldStructInfo, BitsFieldStructInfoVM>(
-                structInfoVMs, Model.StructInfos, a => new BitsFieldStructInfoVM(this, a));
-            StructInfoVMs = new ReadOnlyObservableCollection<BitsFieldStructInfoVM>(structInfoVMs);
+
             NewStructCommand = new DelegateCommand(NewStruct);
             SaveCommand = new DelegateCommand(Save);
             SaveAsCommand = new DelegateCommand(SaveAs);
             OpenCommand = new DelegateCommand(Open);
+        }
+
+        private void LoadModel(string file)
+        {
+            Model = new Model(JObject.Parse(File.ReadAllText(file)));
+            structInfoVMsMapping = new ObservableMappingCollectionMapping<BitFieldStructInfo, BitsFieldStructInfoVM>(
+                structInfoVMs, Model.StructInfos, a => new BitsFieldStructInfoVM(this, a));
+            StructInfoVMs = new ReadOnlyObservableCollection<BitsFieldStructInfoVM>(structInfoVMs);
+        }
+
+        private void LoadEmptyModel()
+        {
+            Model = new Model();
+            structInfoVMsMapping = new ObservableMappingCollectionMapping<BitFieldStructInfo, BitsFieldStructInfoVM>(
+                structInfoVMs, Model.StructInfos, a => new BitsFieldStructInfoVM(this, a));
+            StructInfoVMs = new ReadOnlyObservableCollection<BitsFieldStructInfoVM>(structInfoVMs);
+        }
+
+        private void SaveModel(string file)
+        {
+            File.WriteAllText(file, Model.GetJson().ToString());
         }
 
         public string FileDirectory { get => file; set => OnPropertyChange(ref file, value); }
@@ -52,7 +78,7 @@ namespace Ordinary.GenBitField.Desktop
         private ObservableCollection<BitsFieldStructInfoVM> structInfoVMs = new ObservableCollection<BitsFieldStructInfoVM>();
         private string file;
 
-        public ReadOnlyObservableCollection<BitsFieldStructInfoVM> StructInfoVMs { get; }
+        public ReadOnlyObservableCollection<BitsFieldStructInfoVM> StructInfoVMs { get; private set; }
 
         public void NewStruct()
         {
@@ -80,7 +106,7 @@ namespace Ordinary.GenBitField.Desktop
                 }
             }
             if (!string.IsNullOrEmpty(FileDirectory))
-                File.WriteAllText(FileDirectory, JsonSerializer.Serialize(Model));
+                SaveModel(FileDirectory);
         }
 
         public void SaveAs()
@@ -93,7 +119,7 @@ namespace Ordinary.GenBitField.Desktop
             }
 
             if (!string.IsNullOrEmpty(FileDirectory))
-                File.WriteAllText(FileDirectory, JsonSerializer.Serialize(Model));
+                SaveModel(FileDirectory);
         }
 
         public ICommand SaveAsCommand { get; }
@@ -104,7 +130,7 @@ namespace Ordinary.GenBitField.Desktop
             if (dialog.ShowDialog() ?? false)
             {
                 FileDirectory = dialog.FileName;
-                Model = JsonSerializer.Deserialize<Model>(File.ReadAllText(FileDirectory));
+                LoadModel(FileDirectory);
             }
         }
 

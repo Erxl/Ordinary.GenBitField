@@ -14,11 +14,15 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Linq;
 using Ordinary.Code.CSharp;
-using System.Runtime.Serialization;
+using System.Text.Json;
+
+using System.Linq;
+
+using Newtonsoft.Json.Linq;
 
 namespace Ordinary.GenBitField.Desktop
 {
-    public class Model : ObservableObject, ISerializable
+    public class Model : ObservableObject
     {
         public Model()
         {
@@ -26,10 +30,21 @@ namespace Ordinary.GenBitField.Desktop
             StructInfos = new ReadOnlyObservableCollection<BitFieldStructInfo>(structInfos);
         }
 
-        public Model(SerializationInfo info, StreamingContext context)
+        public Model(JObject jsonData)
         {
+            var array = jsonData[nameof(StructInfos)];
+            structInfos = new ObservableCollection<BitFieldStructInfo>(array.Select(a => new BitFieldStructInfo(a as JObject)));
             StructInfos = new ReadOnlyObservableCollection<BitFieldStructInfo>(structInfos);
-            structInfos = info.GetValue(nameof(StructInfos), typeof(ObservableCollection<BitFieldStructInfo>)) as ObservableCollection<BitFieldStructInfo>;
+        }
+
+        public JArray GetJson()
+        {
+            var a = new JArray();
+            foreach (var item in StructInfos)
+            {
+                a.Add(item.GetJson());
+            }
+            return a;
         }
 
         private ObservableCollection<BitFieldStructInfo> structInfos;
@@ -45,11 +60,6 @@ namespace Ordinary.GenBitField.Desktop
         public void RemoveStruct(BitFieldStructInfo structInfo)
         {
             structInfos.Remove(structInfo);
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue(nameof(StructInfos), StructInfos);
         }
     }
 }

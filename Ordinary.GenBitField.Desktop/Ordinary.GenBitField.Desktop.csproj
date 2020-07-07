@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ordinary.Binary" Version="0.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Ordinary\Ordinary.Code.CSharp\Ordinary.Code.CSharp.csproj" />
+    <ProjectReference Include="..\..\Ordinary\Ordinary.Core\Ordinary.Core.csproj" />
   </ItemGroup>
 </Project>

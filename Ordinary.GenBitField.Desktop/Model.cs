@@ -33,18 +33,22 @@ namespace Ordinary.GenBitField.Desktop
         public Model(JObject jsonData)
         {
             var array = jsonData[nameof(StructInfos)];
-            structInfos = new ObservableCollection<BitFieldStructInfo>(array.Select(a => new BitFieldStructInfo(a as JObject)));
+            var infos = array.Select(a => new BitFieldStructInfo(a as JObject));
+
+            structInfos = new ObservableCollection<BitFieldStructInfo>(infos);
             StructInfos = new ReadOnlyObservableCollection<BitFieldStructInfo>(structInfos);
         }
 
-        public JArray GetJson()
+        public JObject GetJson()
         {
+            var o = new JObject();
             var a = new JArray();
             foreach (var item in StructInfos)
             {
                 a.Add(item.GetJson());
             }
-            return a;
+            o.Add(nameof(StructInfos), a);
+            return o;
         }
 
         private ObservableCollection<BitFieldStructInfo> structInfos;

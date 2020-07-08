@@ -1,155 +1,151 @@
-[
-  {
-    "Name": "MyStruct",
-    "FieldInfos": [
-      {
-        "TypeName": "uint",
-        "Name": "rg",
-        "UseNumber": false,
-        "Bits": 32
-      },
-      {
-        "TypeName": "uint",
-        "Name": "dgdg",
-        "UseNumber": false,
-        "Bits": 32
-      },
-      {
-        "TypeName": "uint",
-        "Name": "dgdgs",
-        "UseNumber": false,
-        "Bits": 32
-      },
-      {
-        "TypeName": "uint",
-        "Name": "dd",
-        "UseNumber": false,
-        "Bits": 32
-      },
-      {
-        "TypeName": "uint",
-        "Name": "g",
-        "UseNumber": false,
-        "Bits": 32
-      },
-      {
-        "TypeName": "uint",
-        "Name": "gf",
-        "UseNumber": false,
-        "Bits": 32
-      },
-      {
-        "TypeName": "uint",
-        "Name": "s",
-        "UseNumber": false,
-        "Bits": 32
-      },
-      {
-        "TypeName": "uint",
-        "Name": "hs",
-        "UseNumber": false,
-        "Bits": 32
-      }
-    ]
-  },
-  {
-    "Name": "测试结构",
-    "FieldInfos": [
-      {
-        "TypeName": "int",
-        "Name": "我",
-        "UseNumber": false,
-        "Bits": 3
-      },
-      {
-        "TypeName": "int",
-        "Name": "是",
-        "UseNumber": false,
-        "Bits": 15
-      },
-      {
-        "TypeName": "int",
-        "Name": "快",
-        "UseNumber": false,
-        "Bits": 8
-      },
-      {
-        "TypeName": "int",
-        "Name": "乐",
-        "UseNumber": false,
-        "Bits": 22
-      },
-      {
-        "TypeName": "ulong",
-        "Name": "小",
-        "UseNumber": false,
-        "Bits": 53
-      },
-      {
-        "TypeName": "int",
-        "Name": "细",
-        "UseNumber": false,
-        "Bits": 2
-      },
-      {
-        "TypeName": "int",
-        "Name": "胞",
-        "UseNumber": false,
-        "Bits": 17
-      }
-    ]
-  },
-  {
-    "Name": "MyStruct",
-    "FieldInfos": [
-      {
-        "TypeName": "uint",
-        "Name": "啊",
-        "UseNumber": false,
-        "Bits": 32
-      },
-      {
-        "TypeName": "uint",
-        "Name": "ad",
-        "UseNumber": false,
-        "Bits": 3
-      },
-      {
-        "TypeName": "uint",
-        "Name": "ad",
-        "UseNumber": false,
-        "Bits": 3
-      },
-      {
-        "TypeName": "uint",
-        "Name": "f",
-        "UseNumber": false,
-        "Bits": 7
-      },
-      {
-        "TypeName": "uint",
-        "Name": "sf",
-        "UseNumber": true,
-        "Number": 2888
-      },
-      {
-        "TypeName": "uint",
-        "Name": "sf5",
-        "UseNumber": false,
-        "Bits": 8
-      },
-      {
-        "TypeName": "uint",
-        "Name": "sf6",
-        "UseNumber": false,
-        "Bits": 17
-      },
-      {
-        "TypeName": "uint",
-        "Name": "sf3",
-        "UseNumber": true,
-        "Number": 2000
-      }
-    ]
-  }
-]
+{
+  "StructInfos": [
+    {
+      "Name": "MyStruct",
+      "FieldInfos": [
+        {
+          "TypeName": "uint",
+          "Name": "a",
+          "UseNumber": false,
+          "Bits": 16
+        },
+        {
+          "TypeName": "int",
+          "Name": "b",
+          "UseNumber": true,
+          "Number": 20000000
+        },
+        {
+          "TypeName": "long",
+          "Name": "c",
+          "UseNumber": true,
+          "Number": 99999999999999999
+        },
+        {
+          "TypeName": "uint24",
+          "Name": "d",
+          "UseNumber": false,
+          "Bits": 24
+        },
+        {
+          "TypeName": "int",
+          "Name": "e",
+          "UseNumber": false,
+          "Bits": 32
+        },
+        {
+          "TypeName": "short",
+          "Name": "f",
+          "UseNumber": false,
+          "Bits": 16
+        },
+        {
+          "TypeName": "byte",
+          "Name": "g",
+          "UseNumber": false,
+          "Bits": 8
+        },
+        {
+          "TypeName": "sbyte",
+          "Name": "h",
+          "UseNumber": false,
+          "Bits": 8
+        },
+        {
+          "TypeName": "ulong",
+          "Name": "i",
+          "UseNumber": false,
+          "Bits": 64
+        },
+        {
+          "TypeName": "uint",
+          "Name": "j",
+          "UseNumber": false,
+          "Bits": 24
+        },
+        {
+          "TypeName": "uint",
+          "Name": "k",
+          "UseNumber": false,
+          "Bits": 25
+        },
+        {
+          "TypeName": "ulong",
+          "Name": "l",
+          "UseNumber": false,
+          "Bits": 24
+        },
+        {
+          "TypeName": "byte",
+          "Name": "m",
+          "UseNumber": false,
+          "Bits": 2
+        },
+        {
+          "TypeName": "nint",
+          "Name": "n",
+          "UseNumber": false,
+          "Bits": 1
+        },
+        {
+          "TypeName": "unint",
+          "Name": "o",
+          "UseNumber": false,
+          "Bits": 31
+        },
+        {
+          "TypeName": "int",
+          "Name": "p",
+          "UseNumber": true,
+          "Number": 10
+        },
+        {
+          "TypeName": "int",
+          "Name": "q",
+          "UseNumber": true,
+          "Number": 1000000
+        },
+        {
+          "TypeName": "int",
+          "Name": "r",
+          "UseNumber": false,
+          "Bits": 1
+        },
+        {
+          "TypeName": "uint",
+          "Name": "s",
+          "UseNumber": false,
+          "Bits": 32
+        },
+        {
+          "TypeName": "uint",
+          "Name": "t",
+          "UseNumber": false,
+          "Bits": 32
+        },
+        {
+          "TypeName": "uint",
+          "Name": "u",
+          "UseNumber": true,
+          "Number": 5555555
+        },
+        {
+          "TypeName": "uint",
+          "Name": "v",
+          "UseNumber": false,
+          "Bits": 32
+        },
+        {
+          "TypeName": "uint",
+          "Name": "w",
+          "UseNumber": false,
+          "Bits": 32
+        }
+      ]
+    },
+    {
+      "Name": "MyStruct",
+      "FieldInfos": []
+    }
+  ]
+}
